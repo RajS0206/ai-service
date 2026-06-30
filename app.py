@@ -30,13 +30,17 @@ def analyze():
     image_base64 = data.get("image_base64")
 
     # Appending details=Celebrities to the query parameters
-    api_url = f"{VISION_ENDPOINT}/vision/v3.2/analyze?visualFeatures=Brands,Faces,Categories&details=Celebrities"
+    api_url = f"{VISION_ENDPOINT}/vision/v3.2/analyze"
+    params = {
+        "visualFeatures": "Categories,Faces,Brands",
+        "details": "Celebrities"
+    }
     headers = {"Ocp-Apim-Subscription-Key": VISION_KEY}
 
     try:
         if image_url:
             headers["Content-Type"] = "application/json"
-            resp = requests.post(api_url, headers=headers, json={"url": image_url}, timeout=20)
+            resp = requests.post(api_url, headers=headers, params=params, json={"url": image_url}, timeout=20)
         elif image_base64:
             if "," in image_base64:
                 image_base64 = image_base64.split(",", 1)[1]
@@ -46,7 +50,7 @@ def analyze():
                 return jsonify({"error": "Invalid base64 image data string"}), 400
                 
             headers["Content-Type"] = "application/octet-stream"
-            resp = requests.post(api_url, headers=headers, data=image_bytes, timeout=20)
+            resp = requests.post(api_url, headers=headers, params=params, data=image_bytes, timeout=20)
         else:
             return jsonify({"error": "No image URL or image data provided"}), 400
     except requests.RequestException as exc:
