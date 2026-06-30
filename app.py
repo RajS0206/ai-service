@@ -42,8 +42,7 @@ def analyze():
     
     # Passing structured parameter dictionaries avoids URL string character parsing errors
     params = {
-        "visualFeatures": "Categories,Faces,Brands",
-        "details": "Celebrities"
+        "visualFeatures": "Categories,Description,Faces,Brands",
     }
 
     try:
